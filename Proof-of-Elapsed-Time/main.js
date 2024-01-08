@@ -1,13 +1,13 @@
 const SHA256 = require('crypto-js/sha256');
 
 class Transactions{
-    constructor(fromAddress, toAddress, amount, check, stack )
+    constructor(fromAddress, toAddress, amount, check, time )
     {
         this.fromAddress = fromAddress;
         this.toAddress = toAddress;
         this.amount = amount;
         this.check = check;
-        this.stack = stack;
+        this.time = time;
         
     }
 }
@@ -56,29 +56,37 @@ class Blockchain {
     }
 
     minePendingTractions(miningRewardAddress) {
-
-        //Proof Of Stake
-        let hold = 0;
-        let transactions2 = this.pendingTransactions[0];
+        let transactions2 = null;
+        let hold = Number.MAX_SAFE_INTEGER;
+    
         for (let i = 0; i < this.pendingTransactions.length; i++) {
-            if (hold < this.pendingTransactions[i].stack && this.pendingTransactions[i].check == false) {
+            if (!this.pendingTransactions[i].check && this.pendingTransactions[i].time < hold) {
                 transactions2 = this.pendingTransactions[i];
-                hold = this.pendingTransactions[i].stack;
+                hold = this.pendingTransactions[i].time;
             }
         }
-        transactions2.check =true;
-        console.log("Maximum stack value: " + hold);
-        let block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
-        block.mineBlock(this.difficulty);
-
-        console.log('Block successfully Mined.!');
-        this.chain.push(block);
-
-        this.pendingTransactions = [
-            new Transactions(null, miningRewardAddress, this.miningReward)
-        ];
+    
+        if (transactions2) {
+            transactions2.check = true;
+            console.log("Time is: " + transactions2.time);
+    
+            let block = new Block(Date.now(), [transactions2], this.getLatestBlock().hash);
+            block.mineBlock();
+    
+            console.log('Block successfully Mined, which has Deposit of: ' + transactions2.amount);
+            this.chain.push(block);
+    
+            // Remove the mined transaction from the pending transactions
+            this.pendingTransactions = this.pendingTransactions.filter(trans => trans !== transactions2);
+        } else {
+            console.log("No valid pending transactions found.");
+        }
+    
+       
+        this.pendingTransactions.push(new Transactions(null, miningRewardAddress, this.miningReward));
     }
-
+    
+    
    
 
     createTransaction(transaction) {
@@ -112,6 +120,7 @@ class Blockchain {
     
         return balance;
     }
+    
 
     isChainValid() {
         for (let i = 1; i < this.chain.length; i++) {
@@ -132,13 +141,18 @@ class Blockchain {
 
 let SavCoin = new Blockchain();
 
-SavCoin.createTransaction(new Transactions("address1" ,"address2", 100, false,20));
+SavCoin.createTransaction(new Transactions("address1" ,"address2", 100, false,Date.now()));
 
-SavCoin.createTransaction(new Transactions("address2" ,"address1", 50, false,100));
+SavCoin.createTransaction(new Transactions("address2" ,"address1", 50, false ,Date.now()));
 
+SavCoin.createTransaction(new Transactions("address3" ,"address4", 20, false ,Date.now()));
+SavCoin.createTransaction(new Transactions("address4" ,"address3", 30, false ,Date.now()));
 
 console.log("Starting the Miner...");
 SavCoin.minePendingTractions("shahroz-address");
 SavCoin.minePendingTractions("shahroz-address");
+SavCoin.minePendingTractions("zain-address");
+
 
 console.log("Balance of Shahroz is: "+ SavCoin.getBalanceOfAddress("shahroz-address"));
+console.log("Balance of Zain is: "+ SavCoin.getBalanceOfAddress("zain-address"));

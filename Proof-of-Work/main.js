@@ -65,18 +65,29 @@ class Blockchain {
 
     getBalanceOfAddress(address) {
         let balance = 0;
-
+    
         for (const block of this.chain) {
             for (const trans of block.transactions) {
                 if (trans.fromAddress === address) {
-                    balance -= trans.amount;
+                    balance = balance -trans.amount;
                 }
-
+    
                 if (trans.toAddress === address) {
-                    balance += trans.amount;
+                    balance = balance + trans.amount;
                 }
             }
         }
+    
+        
+        for (const trans of this.pendingTransactions) {
+            if (trans.toAddress === address) {
+                balance = balance + trans.amount;
+            }
+            if (trans.fromAddress === address) {
+                balance = balance - trans.amount;
+            }
+        }
+    
         return balance;
     }
 
