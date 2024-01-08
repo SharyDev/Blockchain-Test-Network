@@ -20,10 +20,6 @@ Proof-of-Elapsed-Time is a consensus algorithm primarily used in distributed sys
 
 ## Purpose
 
-This repository serves as an educational resource to explore and understand the fundamental concepts and mechanisms behind different consensus algorithms in Blockchain technology.
-
-Feel free to explore the code and dive into the implementations provided.
-
-**Contributions and enhancements are welcome!**
+This repository serves as to explore and understand the fundamental concepts and mechanisms behind different consensus algorithms in Blockchain technology.
 
 ---
