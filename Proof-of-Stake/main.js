@@ -1,5 +1,5 @@
 const SHA256 = require('crypto-js/sha256');
-
+ //Proof Of Stake
 class Transactions{
     constructor(fromAddress, toAddress, amount, check, stack )
     {
@@ -57,7 +57,7 @@ class Blockchain {
 
     minePendingTractions(miningRewardAddress) {
 
-        //Proof Of Stake
+       
         let hold = 0;
         let transactions2 = this.pendingTransactions[0];
         for (let i = 0; i < this.pendingTransactions.length; i++) {

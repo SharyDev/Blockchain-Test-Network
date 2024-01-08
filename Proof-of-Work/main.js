@@ -1,5 +1,7 @@
 const SHA256 = require('crypto-js/sha256');
 
+//Proof-of-Work
+
 class Transactions{
     constructor(fromAddress, toAddress, amount)
     {
@@ -40,7 +42,7 @@ class Blockchain {
     }
 
     createGenesisBlock() {
-        return new Block("01/01/2024", ["Shahroz Block"], "0"); // Add square brackets around "Shahroz Block"
+        return new Block("01/01/2024", ["Shahroz Block"], "0"); 
     }
 
     getLatestBlock() {

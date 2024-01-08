@@ -1,5 +1,7 @@
 const SHA256 = require('crypto-js/sha256');
 
+//Proof-of-Elapsed-Time
+
 class Transactions{
     constructor(fromAddress, toAddress, amount, check, time )
     {
@@ -76,7 +78,7 @@ class Blockchain {
             console.log('Block successfully Mined, which has Deposit of: ' + transactions2.amount);
             this.chain.push(block);
     
-            // Remove the mined transaction from the pending transactions
+           
             this.pendingTransactions = this.pendingTransactions.filter(trans => trans !== transactions2);
         } else {
             console.log("No valid pending transactions found.");
